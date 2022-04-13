@@ -10,13 +10,20 @@ export default new Vuex.Store({
     todos: [],
   },
   getters: {
-    getTodos(state) {
+    GET_TODOS(state) {
       return state.todos;
     },
   },
   mutations: {
-    ADD_TODO(state, todo) {
-      state.todos.push(todo);
+    ADD_TODO(state, todoText = "") {
+      state.todos.push({
+        title: todoText,
+        completed: false,
+        id: state.todos[state.todos.length - 1]?.id
+          ? state.todos[state.todos.length - 1]?.id + 1
+          : 1,
+      });
+      console.log(state);
     },
     REMOVE_TODO(state, todo) {
       state.todos = state.todos.filter((item) => item.id !== todo.id);

@@ -5,11 +5,11 @@
       <input
         class="new-todo"
         autofocus
-        @keyup.enter="addTodo"
+        @keyup.enter="ADD_TODO(newTodo)"
         v-model="newTodo"
       />
     </header>
-    <div class="todo-body" v-if="todos.length">
+    <div class="todo-body" v-if="GET_TODOS.length">
       <div
         v-for="(todo, index) in isFilteredTodos"
         :key="index"
@@ -17,7 +17,7 @@
       >
         <input type="checkbox" class="toggle" v-model="todo.completed" />
         <span>{{ todo.title }}</span>
-        <button class="todo-item__delete" @click="removeTodo(todo.id)"></button>
+        <button class="todo-item__delete" @click="REMOVE_TODO(todo)"></button>
       </div>
       <div class="todo-footer">
         <div class="todo-count">{{ isFilteredTodos.length }} item left</div>
@@ -36,11 +36,7 @@
             {{ filter }}
           </div>
         </div>
-        <div
-          class="todo-clear"
-          @click="removeCompleted"
-          v-if="hasCompletedTodos"
-        >
+        <div class="todo-clear" @click="CLEAR_TODO" v-if="hasCompletedTodos">
           Clear completed
         </div>
       </div>
@@ -49,50 +45,32 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
   name: "todoList",
-  props: {},
   data: () => ({
     selectedFilter: "All",
     todoFilters: ["Active", "Completed", "All"],
-    todos: [
-      {
-        title: "asd",
-        completed: true,
-        id: 1,
-      },
-    ],
     newTodo: "",
   }),
   methods: {
-    addTodo() {
-      if (this.newTodo.length === 0) return;
-      this.todos.push({
-        title: this.newTodo,
-        completed: false,
-        id: this.todos[this.todos.length - 1].id + 1 || 1,
-      });
-      this.newTodo = "";
-    },
-    removeTodo(id) {
-      this.todos = this.todos.filter((item) => item.id !== id);
-    },
-    removeCompleted() {
-      this.todos = this.todos.filter((item) => !item.completed);
-    },
+    ...mapMutations(["ADD_TODO", "REMOVE_TODO", "CLEAR_TODO"]),
   },
   computed: {
+    ...mapGetters(["GET_TODOS"]),
+    //Не уверен что это нужно переносить во vuex
     hasCompletedTodos() {
-      return this.todos.filter((item) => item.completed).length;
+      return this.GET_TODOS.filter((item) => item.completed).length;
     },
     isFilteredTodos() {
       if (this.selectedFilter === "Completed") {
-        return this.todos.filter((item) => item.completed);
+        return this.GET_TODOS.filter((item) => item.completed);
       }
       if (this.selectedFilter === "Active") {
-        return this.todos.filter((item) => !item.completed);
+        return this.GET_TODOS.filter((item) => !item.completed);
       }
-      return this.todos;
+      return this.GET_TODOS;
     },
   },
 };
