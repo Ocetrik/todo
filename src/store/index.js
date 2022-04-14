@@ -29,7 +29,7 @@ export default new Vuex.Store({
       state.todos = state.todos.filter((item) => item.id !== todo.id);
     },
     CLEAR_TODO(state) {
-      state.todos = state.todos.filter((item) => item.completed);
+      state.todos = state.todos.filter((item) => !item.completed);
     },
   },
   modules: {},

@@ -5,7 +5,7 @@
       <input
         class="new-todo"
         autofocus
-        @keyup.enter="ADD_TODO(newTodo)"
+        @keyup.enter="addTodo(newTodo)"
         v-model="newTodo"
       />
     </header>
@@ -17,7 +17,11 @@
       >
         <input type="checkbox" class="toggle" v-model="todo.completed" />
         <span>{{ todo.title }}</span>
-        <button class="todo-item__delete" @click="REMOVE_TODO(todo)"></button>
+        <img
+          src="@/assets/cross.svg"
+          class="todo-item__delete"
+          @click="REMOVE_TODO(todo)"
+        />
       </div>
       <div class="todo-footer">
         <div class="todo-count">{{ isFilteredTodos.length }} item left</div>
@@ -56,6 +60,10 @@ export default {
   }),
   methods: {
     ...mapMutations(["ADD_TODO", "REMOVE_TODO", "CLEAR_TODO"]),
+    addTodo(text) {
+      this.ADD_TODO(text);
+      this.newTodo = "";
+    },
   },
   computed: {
     ...mapGetters(["GET_TODOS"]),
@@ -77,65 +85,61 @@ export default {
 </script>
 
 <style scoped lang="scss">
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
+.todoapp {
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.4em;
-  background: #f5f5f5;
   color: #4d4d4d;
   min-width: 230px;
   max-width: 550px;
   margin: 0 auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   font-weight: 300;
-}
-.todoapp {
   background: #fff;
-  margin: 130px 0 40px 0;
   position: relative;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  padding: 3em;
 }
-.todoapp input::-webkit-input-placeholder {
-  font-style: italic;
-  font-weight: 300;
-  color: #e6e6e6;
-}
-
-.todoapp input::-moz-placeholder {
-  font-style: italic;
-  font-weight: 300;
-  color: #e6e6e6;
-}
-
-.todoapp input::input-placeholder {
-  font-style: italic;
-  font-weight: 300;
-  color: #e6e6e6;
+h1 {
+  font-size: 60px;
 }
 .main {
   position: relative;
   z-index: 2;
   border-top: 1px solid #e6e6e6;
 }
+.new-todo {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  font-size: 24px;
+  line-height: 1.4em;
+  border: 0;
+  color: inherit;
+  padding: 6px;
+  border: 1px solid #999;
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+.todo-body {
+  margin-top: 2em;
+}
+.toggle {
+  margin-right: 1em;
+}
 .todo-footer {
   display: flex;
-  gap: 20px;
+  gap: 2em;
 }
 .todo-filter {
   display: flex;
-  gap: 20px;
+  gap: 3em;
 }
-.delete {
-  background-color: #000;
-  margin-left: auto;
+.todo-item__delete {
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
 }
-.todo-list {
+.todo-item {
   display: flex;
+  align-items: center;
 }
 </style>
